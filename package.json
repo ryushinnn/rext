@@ -1,0 +1,14 @@
+{
+  "name": "com.tienassassin.assassin-sdk",
+  "version": "1.0.0",
+  "displayName": "Assassin SDK",
+  "description": "This is the collection of Tien's reusable scrips.",
+  "unity": "2020.1",
+  "author": {
+    "name": "Tien Assassin",
+    "email": "liw140402@gmail.com"
+  },
+  "dependencies": {
+    "com.unity.nuget.newtonsoft-json": "3.2.1"
+  }
+}
