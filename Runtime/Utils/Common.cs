@@ -116,7 +116,7 @@ namespace Assassin.Utils {
         public static void SetCanvasPosition(RectTransform target, Vector2 canvasPosition, Canvas canvas) {
             if (CompareFloat(target.anchorMin.x, target.anchorMax.x) != 0
                 || CompareFloat(target.anchorMin.y, target.anchorMax.y) != 0) {
-                Logger.Log("Only rect transform with 1 anchor (anchorMin = anchorMax) is supported");
+                ALog.Log("Only rect transform with 1 anchor (anchorMin = anchorMax) is supported");
             }
 
             var canvasSizeDelta = canvas.GetComponent<RectTransform>().sizeDelta;

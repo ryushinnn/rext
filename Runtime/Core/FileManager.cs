@@ -1,9 +1,9 @@
 using System;
 using System.IO;
 using Assassin.Encryption;
+using Assassin.Utils;
 using Newtonsoft.Json;
 using UnityEngine;
-using Logger = Assassin.Utils.Logger;
 
 namespace Assassin.Core {
     /// <summary>
@@ -21,7 +21,7 @@ namespace Assassin.Core {
                 return false;
             }
             catch (Exception e) {
-                Logger.LogError(e.Message);
+                ALog.LogError(e.Message);
                 throw;
             }
         }
@@ -30,11 +30,11 @@ namespace Assassin.Core {
             bool createFolderIfNeed = true) {
             try {
                 var content = JsonConvert.SerializeObject(obj);
-                Logger.Log("SaveObject: " + content);
+                ALog.Log("SaveObject: " + content);
                 Save(folder, fileName, encryptPass, content, createFolderIfNeed);
             }
             catch (Exception e) {
-                Logger.Log(e.Message);
+                ALog.Log(e.Message);
                 throw;
             }
         }
@@ -48,10 +48,10 @@ namespace Assassin.Core {
                 string encrypted = RijndaelEncryption.Encrypt(content, encryptPass);
                 using var writer = new StreamWriter(fullPath);
                 writer.Write(encrypted);
-                Logger.Log(fileName + " saved at " + fullPath);
+                ALog.Log(fileName + " saved at " + fullPath);
             }
             catch (Exception e) {
-                Logger.Log(e.Message);
+                ALog.Log(e.Message);
             }
         }
 
@@ -60,7 +60,7 @@ namespace Assassin.Core {
             var fullPath = Application.persistentDataPath + "/" + folder + "/" + fileName;
             if (!CheckExists(fullPath)) {
                 content = null;
-                Logger.Log(fullPath + " not existed!");
+                ALog.Log(fullPath + " not existed!");
                 return false;
             }
 
@@ -70,11 +70,11 @@ namespace Assassin.Core {
             // Decrypt
             try {
                 content = RijndaelEncryption.Decrypt(dataToLoad, encryptPass);
-                Logger.Log($"Load file {fileName} content: " + content);
+                ALog.Log($"Load file {fileName} content: " + content);
                 return true;
             }
             catch (Exception e) {
-                Logger.Log(e.Message);
+                ALog.Log(e.Message);
                 content = null;
                 return false;
             }
@@ -99,10 +99,10 @@ namespace Assassin.Core {
 
                 // Try to create the directory.
                 Directory.CreateDirectory(fullPath);
-                Logger.Log("The directory was created successfully at {0}." + Directory.GetCreationTime(fullPath));
+                ALog.Log("The directory was created successfully at {0}." + Directory.GetCreationTime(fullPath));
             }
             catch (Exception e) {
-                Logger.Log("The process failed: {0} " + e);
+                ALog.Log("The process failed: {0} " + e);
             }
         }
     }

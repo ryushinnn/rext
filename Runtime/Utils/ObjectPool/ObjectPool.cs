@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 
 namespace Assassin.Utils.ObjectPool {
@@ -71,7 +70,7 @@ namespace Assassin.Utils.ObjectPool {
         }
 
         private class ObjectContainer : MonoBehaviour {
-            private Dictionary<Category, Transform> _categoryDictionary = new();
+            private Dictionary<string, Transform> _categoryDictionary = new();
 
             public GameObject InstantiateObject(GameObject prefab) {
                 var obj = Instantiate(prefab);
@@ -79,7 +78,7 @@ namespace Assassin.Utils.ObjectPool {
                 return obj;
             }
 
-            public void AddToCategory(GameObject obj, Category category) {
+            public void AddToCategory(GameObject obj, string category) {
                 if (!_categoryDictionary.ContainsKey(category)) {
                     _categoryDictionary.Add(category, CreateCategory(category));
                 }
@@ -87,8 +86,8 @@ namespace Assassin.Utils.ObjectPool {
                 obj.transform.SetParent(_categoryDictionary[category]);
             }
 
-            private Transform CreateCategory(Category category) {
-                var tf = new GameObject(category.ToString()).transform;
+            private Transform CreateCategory(string category) {
+                var tf = new GameObject(category).transform;
                 tf.SetParent(transform);
                 return tf;
             }
