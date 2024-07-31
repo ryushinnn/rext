@@ -1,6 +1,6 @@
 {
   "name": "com.tienassassin.assassin-sdk",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "displayName": "Assassin SDK",
   "description": "This is the collection of Tien's reusable scrips.",
   "unity": "2020.1",
