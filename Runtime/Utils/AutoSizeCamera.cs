@@ -1,5 +1,4 @@
-﻿using Sirenix.OdinInspector;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Assassin.Utils {
     public class AutoSizeCamera : MonoBehaviour {
