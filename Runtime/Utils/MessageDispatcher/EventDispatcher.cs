@@ -24,4 +24,11 @@ namespace Assassin.Utils {
             _handle = (T)Delegate.Remove(_handle, callback);
         }
     }
+
+    public class GameEventExample {
+        public delegate void Example1();
+        public delegate void Example2(int value);
+        public delegate void Example3(string value1, float value2);
+        // ...
+    }
 }

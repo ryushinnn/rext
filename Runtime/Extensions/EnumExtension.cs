@@ -2,6 +2,21 @@ using System;
 using System.ComponentModel;
 
 namespace Assassin.Extension {
+    [Flags]
+    public enum FlagEnumExample {
+        None = 0,
+        First = 0x01,
+        Second = 0x02,
+        Third = 0x04,
+        Fourth = 0x08,
+        Fifth = 0x10,
+        Sixth = 0x20,
+        FirstAndSecond = First | Second,
+        ExceptFirst = Second | Third | Fourth | Fifth | Sixth,
+        // ...
+        All = First | Second | Third | Fourth | Fifth | Sixth
+    }
+    
     public static class EnumExtension {
         public static string ToDescriptionString(this Enum value) {
             var attributes = (DescriptionAttribute[]) value
@@ -40,6 +55,14 @@ namespace Assassin.Extension {
             var arr = (T[]) Enum.GetValues(source.GetType());
             var j = Array.IndexOf(arr, source) + 1;
             return arr.Length == j ? arr[0] : arr[j];
+        }
+
+        /// <summary>
+        /// Check if an enum (combination) contains another enum
+        /// </summary>
+        public static bool Has(this Enum combination, Enum value) {
+            if (combination.GetType() != value.GetType()) throw new ArgumentException("Type mismatch");
+            return (combination.IntValue() & value.IntValue()) == value.IntValue();
         }
     }
 }
