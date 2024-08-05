@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-namespace Assassin.UI {
+namespace Ryushin.UI {
     public class SafeAreaException : MonoBehaviour {
         private Vector2 _defaultScreen = new(1080, 1920);
         private RectTransform _panel;

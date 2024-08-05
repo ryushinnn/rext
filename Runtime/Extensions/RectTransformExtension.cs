@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Assassin.Extension {
+namespace Ryushin.Extension {
     public static class RectTransformExtension {
         public static void SetRect(this RectTransform rt, float left, float right, float top, float bottom) {
             rt.SetLeft(left);

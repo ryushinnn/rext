@@ -2,7 +2,7 @@ using System;
 using System.Reflection;
 using UnityEngine;
 
-namespace Assassin.Utils {
+namespace Ryushin.Utils {
     public static class UniversalClipboard {
         private interface IClipboard {
             void SetText(string text);

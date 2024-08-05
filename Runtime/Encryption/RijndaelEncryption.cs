@@ -3,7 +3,7 @@ using System.Text;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 
-namespace Assassin.Encryption {
+namespace Ryushin.Encryption {
     public static class RijndaelEncryption {
         private static int _bufferKeySize = 32;
         private static int _blockSize = 256;

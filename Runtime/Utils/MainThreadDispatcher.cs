@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Assassin.Utils {
+namespace Ryushin.Utils {
     public class MainThreadDispatcher : MonoBehaviour {
         private static readonly Queue<Action> _executionQueue = new();
         

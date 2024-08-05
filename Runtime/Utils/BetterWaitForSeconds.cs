@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace Assassin.Utils {
+namespace Ryushin.Utils {
     /// <summary>
     /// How to use: yield return BetterWaitForSeconds.Wait(1f) or yield return BetterWaitForSeconds.WaitRealtime(1f);
     /// </summary>

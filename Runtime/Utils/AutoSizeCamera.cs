@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Assassin.Utils {
+namespace Ryushin.Utils {
     public class AutoSizeCamera : MonoBehaviour {
         [SerializeField] private Vector2 _defaultScreen = new(1080, 1920);
         [SerializeField] private Orientation _orientation;

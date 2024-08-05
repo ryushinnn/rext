@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Assassin.Extension {
+namespace Ryushin.Extension {
     public static class ScrollRectExtension {
 		public static Vector2 CalculateFocusedScrollPosition( this ScrollRect scrollView, Vector2 focusPoint )
 		{

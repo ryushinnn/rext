@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel;
 
-namespace Assassin.Extension {
+namespace Ryushin.Extension {
     [Flags]
     public enum FlagEnumExample {
         None = 0,

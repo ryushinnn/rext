@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Assassin.Extension {
+namespace Ryushin.Extension {
     public static class TransformExtension {
         public static void IterateChildren<T>(this Transform tf, Action<T> task) {
             foreach (Transform child in tf) {

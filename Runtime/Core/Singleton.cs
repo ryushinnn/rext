@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Assassin.Core {
+namespace Ryushin.Core {
     public abstract class Singleton<T> : MonoBehaviour where T : MonoBehaviour {
         private static T _instance; 
         

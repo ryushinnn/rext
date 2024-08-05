@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
-using Assassin.Extension;
+using Ryushin.Extension;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace Assassin.Utils {
+namespace Ryushin.Utils {
     public static class Common {
         #region Transform/GameObject
 

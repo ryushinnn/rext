@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Assassin.Encryption {
+namespace Ryushin.Encryption {
     public static class RSAEncryption {
         public static KeyValuePair<string, string> GenrateKeyPair(int keySize) {
             var rsa = new RSACryptoServiceProvider(keySize);

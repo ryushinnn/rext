@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Assassin.UI {
+namespace Ryushin.UI {
     public class AutoMatchCanvas : MonoBehaviour {
         [SerializeField] private int _defaultWidth = 1920;
         [SerializeField] private int _defaultHeight = 1080;

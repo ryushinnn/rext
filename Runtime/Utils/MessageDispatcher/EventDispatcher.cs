@@ -1,6 +1,6 @@
 using System;
 
-namespace Assassin.Utils {
+namespace Ryushin.Utils.EventDispatcher {
     public class EventDispatcher<T> where T : Delegate {
         /// <summary>
         /// Use this to trigger messages

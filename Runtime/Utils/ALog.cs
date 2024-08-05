@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Assassin.Utils {
+namespace Ryushin.Utils {
     public static class ALog {
         [System.Diagnostics.Conditional("UNITY_EDITOR")]
         public static void Log(object message, Object context = null)

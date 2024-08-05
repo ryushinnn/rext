@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Assassin.UI {
+namespace Ryushin.UI {
     [RequireComponent(typeof(RectTransform))]
     public class SafeArea : MonoBehaviour {
         private RectTransform _panel;

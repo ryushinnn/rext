@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Assassin.Utils.ObjectPool {
+namespace Ryushin.Utils.ObjectPool {
     [DisallowMultipleComponent]
     public class ObjectTag : MonoBehaviour {
         public int PrefabID { get { return _prefabID; } set { _prefabID = value; } }

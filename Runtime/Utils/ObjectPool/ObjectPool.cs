@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Assassin.Utils.ObjectPool {
+namespace Ryushin.Utils.ObjectPool {
     public static class ObjectPool {
         private static Dictionary<int, GameObject> _prefabsDictionary = new();
         private static Dictionary<int, Queue<GameObject>> _availableObjectDictionary = new();

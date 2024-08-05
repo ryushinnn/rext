@@ -1,11 +1,11 @@
 using System;
 using System.IO;
-using Assassin.Encryption;
-using Assassin.Utils;
 using Newtonsoft.Json;
+using Ryushin.Encryption;
+using Ryushin.Utils;
 using UnityEngine;
 
-namespace Assassin.Core {
+namespace Ryushin.Core {
     /// <summary>
     /// FileManager - Files will be saved in app persistentDataPath
     /// </summary>
