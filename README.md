@@ -1,1 +1,1 @@
-# ryushin library
+# Ryushin Extensions (C#)
