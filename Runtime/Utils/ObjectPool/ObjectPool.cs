@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Ryushin.Utils.ObjectPool {
+namespace RExt.Utils.ObjectPool {
     public static class ObjectPool {
-        private static Dictionary<int, GameObject> _prefabsDictionary = new();
-        private static Dictionary<int, Queue<GameObject>> _availableObjectDictionary = new();
-        private static ObjectContainer _container;
+        static Dictionary<int, GameObject> PrefabsDictionary = new();
+        static Dictionary<int, Queue<GameObject>> AvailableObjectDictionary = new();
+        static ObjectContainer Container;
 
         public static GameObject SpawnObject(GameObject prefab, Vector3 position) {
             var obj = GetNewObject(prefab);
@@ -30,18 +30,18 @@ namespace Ryushin.Utils.ObjectPool {
         public static void DestroyObject(GameObject obj) {
             var objectTag = obj.GetComponent<ObjectTag>();
             if (!objectTag.IsActive) return;
-            if (!_availableObjectDictionary.ContainsKey(objectTag.PrefabID)) {
-                _availableObjectDictionary.Add(objectTag.PrefabID, new Queue<GameObject>());
+            if (!AvailableObjectDictionary.ContainsKey(objectTag.PrefabID)) {
+                AvailableObjectDictionary.Add(objectTag.PrefabID, new Queue<GameObject>());
             }
 
             objectTag.IsActive = false;
             obj.SetActive(false);
-            _availableObjectDictionary[objectTag.PrefabID].Enqueue(obj);
+            AvailableObjectDictionary[objectTag.PrefabID].Enqueue(obj);
             GetContainer().AddToCategory(obj, objectTag.Category);
         }
 
-        private static GameObject InstantiateObjectFromPool(GameObject prefab) {
-            _prefabsDictionary.TryAdd(prefab.GetInstanceID(), prefab);
+        static GameObject InstantiateObjectFromPool(GameObject prefab) {
+            PrefabsDictionary.TryAdd(prefab.GetInstanceID(), prefab);
             var obj = GetContainer().InstantiateObject(prefab);
             var prefabTag = prefab.GetComponent<ObjectTag>();
             var objectTag = obj.GetComponent<ObjectTag>();
@@ -50,27 +50,27 @@ namespace Ryushin.Utils.ObjectPool {
             return obj;
         }
 
-        private static GameObject GetAvailableObjectFromQueue(GameObject prefab) {
-            if (_availableObjectDictionary.TryGetValue(prefab.GetInstanceID(), out var queue) && queue.Count > 0) {
+        static GameObject GetAvailableObjectFromQueue(GameObject prefab) {
+            if (AvailableObjectDictionary.TryGetValue(prefab.GetInstanceID(), out var queue) && queue.Count > 0) {
                 return queue.Dequeue();
             }
 
             return null;
         }
 
-        private static GameObject GetNewObject(GameObject prefab) {
+        static GameObject GetNewObject(GameObject prefab) {
             var obj = GetAvailableObjectFromQueue(prefab);
             obj ??= InstantiateObjectFromPool(prefab);
             return obj;
         }
 
-        private static ObjectContainer GetContainer() {
-            if (!_container) _container = new GameObject("ObjectContainer").AddComponent<ObjectContainer>();
-            return _container;
+        static ObjectContainer GetContainer() {
+            if (!Container) Container = new GameObject("ObjectContainer").AddComponent<ObjectContainer>();
+            return Container;
         }
 
-        private class ObjectContainer : MonoBehaviour {
-            private Dictionary<string, Transform> _categoryDictionary = new();
+        class ObjectContainer : MonoBehaviour {
+            Dictionary<string, Transform> categoryDictionary = new();
 
             public GameObject InstantiateObject(GameObject prefab) {
                 var obj = Instantiate(prefab);
@@ -79,14 +79,14 @@ namespace Ryushin.Utils.ObjectPool {
             }
 
             public void AddToCategory(GameObject obj, string category) {
-                if (!_categoryDictionary.ContainsKey(category)) {
-                    _categoryDictionary.Add(category, CreateCategory(category));
+                if (!categoryDictionary.ContainsKey(category)) {
+                    categoryDictionary.Add(category, CreateCategory(category));
                 }
                 
-                obj.transform.SetParent(_categoryDictionary[category]);
+                obj.transform.SetParent(categoryDictionary[category]);
             }
 
-            private Transform CreateCategory(string category) {
+            Transform CreateCategory(string category) {
                 var tf = new GameObject(category).transform;
                 tf.SetParent(transform);
                 return tf;

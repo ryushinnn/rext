@@ -3,16 +3,16 @@ using System.Text;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 
-namespace Ryushin.Encryption {
+namespace RExt.Encryption {
     public static class RijndaelEncryption {
-        private static int _bufferKeySize = 32;
-        private static int _blockSize = 256;
-        private static int _keySize = 256;
+        static int bufferKeySize = 32;
+        static int blockSize = 256;
+        static int keySize = 256;
 
         public static void UpdateEncryptionKeySize(int bufferKeySize = 32, int blockSize = 256, int keySize = 256) {
-            _bufferKeySize = bufferKeySize;
-            _blockSize = blockSize;
-            _keySize = keySize;
+            RijndaelEncryption.bufferKeySize = bufferKeySize;
+            RijndaelEncryption.blockSize = blockSize;
+            RijndaelEncryption.keySize = keySize;
         }
 
         public static string Encrypt(string plane, string password) {
@@ -20,17 +20,17 @@ namespace Ryushin.Encryption {
             return Convert.ToBase64String(encrypted);
         }
 
-        private static byte[] Encrypt(byte[] src, string password) {
+        static byte[] Encrypt(byte[] src, string password) {
             var rij = SetupRijndaelManaged;
 
             // A pseudorandom number is newly generated based on the inputted password
-            var deriveBytes = new Rfc2898DeriveBytes(password, _bufferKeySize);
+            var deriveBytes = new Rfc2898DeriveBytes(password, bufferKeySize);
             // The missing parts are specified in advance to fill in 0 length
-            var salt = new byte[_bufferKeySize];
+            var salt = new byte[bufferKeySize];
             // Rfc2898DeriveBytes gets an internally generated salt
             salt = deriveBytes.Salt;
             // The 32-byte data extracted from the generated pseudorandom number is used as a password
-            var bufferKey = deriveBytes.GetBytes(_bufferKeySize);
+            var bufferKey = deriveBytes.GetBytes(bufferKeySize);
 
             rij.Key = bufferKey;
             rij.GenerateIV();
@@ -49,33 +49,33 @@ namespace Ryushin.Encryption {
             return Encoding.UTF8.GetString(decripted);
         }
 
-        private static byte[] Decrypt(byte[] src, string password) {
+        static byte[] Decrypt(byte[] src, string password) {
             var rij = SetupRijndaelManaged;
 
             var compile = new List<byte>(src);
 
             // First 32 bytes are salt.
-            var salt = compile.GetRange(0, _bufferKeySize);
+            var salt = compile.GetRange(0, bufferKeySize);
             // Second 32 bytes are IV.
-            var iv = compile.GetRange(_bufferKeySize, _bufferKeySize);
+            var iv = compile.GetRange(bufferKeySize, bufferKeySize);
             rij.IV = iv.ToArray();
 
             var deriveBytes = new Rfc2898DeriveBytes(password, salt.ToArray());
-            var bufferKey = deriveBytes.GetBytes(_bufferKeySize); // Convert 32 bytes of salt to password
+            var bufferKey = deriveBytes.GetBytes(bufferKeySize); // Convert 32 bytes of salt to password
             rij.Key = bufferKey;
 
-            var plain = compile.GetRange(_bufferKeySize * 2, compile.Count - (_bufferKeySize * 2)).ToArray();
+            var plain = compile.GetRange(bufferKeySize * 2, compile.Count - (bufferKeySize * 2)).ToArray();
 
             using var decrypt = rij.CreateDecryptor(rij.Key, rij.IV);
             var dest = decrypt.TransformFinalBlock(plain, 0, plain.Length);
             return dest;
         }
 
-        private static RijndaelManaged SetupRijndaelManaged {
+        static RijndaelManaged SetupRijndaelManaged {
             get {
                 var rij = new RijndaelManaged();
-                rij.BlockSize = _blockSize;
-                rij.KeySize = _keySize;
+                rij.BlockSize = blockSize;
+                rij.KeySize = keySize;
                 rij.Mode = CipherMode.CBC;
                 rij.Padding = PaddingMode.PKCS7;
                 return rij;

@@ -2,14 +2,14 @@ using System;
 using System.Reflection;
 using UnityEngine;
 
-namespace Ryushin.Utils {
+namespace RExt.Utils {
     public static class UniversalClipboard {
-        private interface IClipboard {
+        interface IClipboard {
             void SetText(string text);
             string GetText();
         }
-        
-        private static IClipboard _clipboard;
+
+        static IClipboard Clipboard;
         
         public static void SetText(string text) {
             GetClipboard().SetText(text);
@@ -19,37 +19,37 @@ namespace Ryushin.Utils {
             return GetClipboard().GetText();
         }
 
-        private static IClipboard GetClipboard() {
-            if (_clipboard == null) {
+        static IClipboard GetClipboard() {
+            if (Clipboard == null) {
 #if UNITY_ANDROID && !UNITY_EDITOR
-                _clipboard = new AndroidClipboard();
+                Clipboard = new AndroidClipboard();
 #elif UNITY_IOS && !UNITY_TVOS && !UNITY_EDITOR
-                _clipboard = new IOSClipboard();
+                Clipboard = new IOSClipboard();
 #else
-                _clipboard = new StandardClipboard();
+                Clipboard = new StandardClipboard();
 #endif
             }
 
-            return _clipboard;
+            return Clipboard;
         }
 
-        private class StandardClipboard : IClipboard {
-            private PropertyInfo _systemCopyBufferProperty;
+        class StandardClipboard : IClipboard {
+            PropertyInfo systemCopyBufferProperty;
 
-            private PropertyInfo GetSystemCopyBufferProperty() {
-                if (_systemCopyBufferProperty == null) {
+            PropertyInfo GetSystemCopyBufferProperty() {
+                if (systemCopyBufferProperty == null) {
                     var t = typeof(GUIUtility);
-                    _systemCopyBufferProperty = t.GetProperty("systemCopyBuffer", BindingFlags.Static | BindingFlags.Public);
-                    if (_systemCopyBufferProperty == null) {
-                        _systemCopyBufferProperty = t.GetProperty("systemCopyBuffer", BindingFlags.Static | BindingFlags.NonPublic);
+                    systemCopyBufferProperty = t.GetProperty("systemCopyBuffer", BindingFlags.Static | BindingFlags.Public);
+                    if (systemCopyBufferProperty == null) {
+                        systemCopyBufferProperty = t.GetProperty("systemCopyBuffer", BindingFlags.Static | BindingFlags.NonPublic);
                     }
 
-                    if (_systemCopyBufferProperty == null) {
+                    if (systemCopyBufferProperty == null) {
                         throw new Exception("Can't access internal member 'GUIUtility.systemCopyBuffer' it may have been removed / renamed");
                     }
                 }
 
-                return _systemCopyBufferProperty;
+                return systemCopyBufferProperty;
             }
 
             public void SetText(string text) {
@@ -62,7 +62,7 @@ namespace Ryushin.Utils {
         }
         
 #if UNITY_IOS && !UNITY_TVOS
-        private class IOSClipboard : IClipboard {
+        class IOSClipboard : IClipboard {
             [DllImport("__Internal")]
             static extern void SetText_ (string str);
             [DllImport("__Internal")]
@@ -81,8 +81,8 @@ namespace Ryushin.Utils {
 #endif
 
 #if UNITY_ANDROID
-        private class AndroidClipboard : IClipboard {
-            private AndroidJavaObject GetClipboardManager() {
+        class AndroidClipboard : IClipboard {
+            AndroidJavaObject GetClipboardManager() {
                 var unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
                 var activity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
                 var staticContext = new AndroidJavaClass("android.content.Context");

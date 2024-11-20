@@ -1,23 +1,23 @@
 ﻿using UnityEngine;
 
-namespace Ryushin.Utils {
+namespace RExt.Utils {
     public class AutoSizeCamera : MonoBehaviour {
-        [SerializeField] private Vector2 _defaultScreen = new(1080, 1920);
-        [SerializeField] private Orientation _orientation;
-        [SerializeField] private AspectMode _aspectMode;
+        [SerializeField] Vector2 defaultScreen = new(1080, 1920);
+        [SerializeField] Orientation orientation;
+        [SerializeField] AspectMode aspectMode;
 
-        private void Awake() {
+        void Awake() {
             var cam = GetComponent<Camera>();
-            if ((_orientation == Orientation.Portrait && _defaultScreen.x > _defaultScreen.y)
-                || _orientation == Orientation.Landscape && _defaultScreen.x < _defaultScreen.y) {
-                _defaultScreen = new Vector2(_defaultScreen.y, _defaultScreen.x);
+            if ((orientation == Orientation.Portrait && defaultScreen.x > defaultScreen.y)
+                || orientation == Orientation.Landscape && defaultScreen.x < defaultScreen.y) {
+                defaultScreen = new Vector2(defaultScreen.y, defaultScreen.x);
             }
             
-            var ratio = (1f * Screen.width / Screen.height) / (_defaultScreen.x / _defaultScreen.y);
-            if (_aspectMode == AspectMode.Fit) {
+            var ratio = (1f * Screen.width / Screen.height) / (defaultScreen.x / defaultScreen.y);
+            if (aspectMode == AspectMode.Fit) {
                 ratio = ratio < 1 ? ratio : 1;
                 cam.orthographicSize /= ratio;
-            } else if (_aspectMode == AspectMode.Envelope) {
+            } else if (aspectMode == AspectMode.Envelope) {
                 ratio = ratio < 1 ? 1 : ratio;
                 cam.orthographicSize /= ratio;
             }

@@ -1,14 +1,14 @@
 using UnityEngine;
 
-namespace Ryushin.Utils.ObjectPool {
+namespace RExt.Utils.ObjectPool {
     [DisallowMultipleComponent]
     public class ObjectTag : MonoBehaviour {
-        public int PrefabID { get { return _prefabID; } set { _prefabID = value; } }
-        public string Category { get { return _category; } set { _category = value; } }
-        public bool IsActive { get { return _isActive; } set { _isActive = value; } }
+        public int PrefabID { get { return prefabID; } set { prefabID = value; } }
+        public string Category { get { return category; } set { category = value; } }
+        public bool IsActive { get { return isActive; } set { isActive = value; } }
 
-        [SerializeField] private string _category;
-        private int _prefabID;
-        private bool _isActive;
+        [SerializeField] protected string category;
+        protected int prefabID;
+        protected bool isActive;
     }
 }

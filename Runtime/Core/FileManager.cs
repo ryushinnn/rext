@@ -1,11 +1,11 @@
 using System;
 using System.IO;
 using Newtonsoft.Json;
-using Ryushin.Encryption;
-using Ryushin.Utils;
+using RExt.Encryption;
+using RExt.Utils;
 using UnityEngine;
 
-namespace Ryushin.Core {
+namespace RExt.Core {
     /// <summary>
     /// FileManager - Files will be saved in app persistentDataPath
     /// </summary>
@@ -21,7 +21,7 @@ namespace Ryushin.Core {
                 return false;
             }
             catch (Exception e) {
-                ALog.LogError(e.Message);
+                RLog.LogError(e.Message);
                 throw;
             }
         }
@@ -30,11 +30,11 @@ namespace Ryushin.Core {
             bool createFolderIfNeed = true) {
             try {
                 var content = JsonConvert.SerializeObject(obj);
-                ALog.Log("SaveObject: " + content);
+                RLog.Log("SaveObject: " + content);
                 Save(folder, fileName, encryptPass, content, createFolderIfNeed);
             }
             catch (Exception e) {
-                ALog.Log(e.Message);
+                RLog.Log(e.Message);
                 throw;
             }
         }
@@ -48,10 +48,10 @@ namespace Ryushin.Core {
                 string encrypted = RijndaelEncryption.Encrypt(content, encryptPass);
                 using var writer = new StreamWriter(fullPath);
                 writer.Write(encrypted);
-                ALog.Log(fileName + " saved at " + fullPath);
+                RLog.Log(fileName + " saved at " + fullPath);
             }
             catch (Exception e) {
-                ALog.Log(e.Message);
+                RLog.Log(e.Message);
             }
         }
 
@@ -60,7 +60,7 @@ namespace Ryushin.Core {
             var fullPath = Application.persistentDataPath + "/" + folder + "/" + fileName;
             if (!CheckExists(fullPath)) {
                 content = null;
-                ALog.Log(fullPath + " not existed!");
+                RLog.Log(fullPath + " not existed!");
                 return false;
             }
 
@@ -70,11 +70,11 @@ namespace Ryushin.Core {
             // Decrypt
             try {
                 content = RijndaelEncryption.Decrypt(dataToLoad, encryptPass);
-                ALog.Log($"Load file {fileName} content: " + content);
+                RLog.Log($"Load file {fileName} content: " + content);
                 return true;
             }
             catch (Exception e) {
-                ALog.Log(e.Message);
+                RLog.Log(e.Message);
                 content = null;
                 return false;
             }
@@ -99,10 +99,10 @@ namespace Ryushin.Core {
 
                 // Try to create the directory.
                 Directory.CreateDirectory(fullPath);
-                ALog.Log("The directory was created successfully at {0}." + Directory.GetCreationTime(fullPath));
+                RLog.Log("The directory was created successfully at {0}." + Directory.GetCreationTime(fullPath));
             }
             catch (Exception e) {
-                ALog.Log("The process failed: {0} " + e);
+                RLog.Log("The process failed: {0} " + e);
             }
         }
     }

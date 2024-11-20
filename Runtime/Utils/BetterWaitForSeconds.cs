@@ -1,17 +1,17 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace Ryushin.Utils {
+namespace RExt.Utils {
     /// <summary>
     /// How to use: yield return BetterWaitForSeconds.Wait(1f) or yield return BetterWaitForSeconds.WaitRealtime(1f);
     /// </summary>
     public static class BetterWaitForSeconds {
-        private class WaitForSeconds : CustomYieldInstruction {
-            private float _waitUntil;
+        class WaitForSeconds : CustomYieldInstruction {
+            float waitUntil;
 
             public override bool keepWaiting {
                 get {
-                    if (Time.time < _waitUntil)
+                    if (Time.time < waitUntil)
                         return true;
 
                     Pool(this);
@@ -20,16 +20,16 @@ namespace Ryushin.Utils {
             }
 
             public void Initialize(float seconds) {
-                _waitUntil = Time.time + seconds;
+                waitUntil = Time.time + seconds;
             }
         }
 
-        private class WaitForSecondsRealtime : CustomYieldInstruction {
-            private float _waitUntil;
+        class WaitForSecondsRealtime : CustomYieldInstruction {
+            float waitUntil;
 
             public override bool keepWaiting {
                 get {
-                    if (Time.realtimeSinceStartup < _waitUntil)
+                    if (Time.realtimeSinceStartup < waitUntil)
                         return true;
 
                     Pool(this);
@@ -38,14 +38,14 @@ namespace Ryushin.Utils {
             }
 
             public void Initialize(float seconds) {
-                _waitUntil = Time.realtimeSinceStartup + seconds;
+                waitUntil = Time.realtimeSinceStartup + seconds;
             }
         }
 
-        private const int POOL_INITIAL_SIZE = 4;
+        const int POOL_INITIAL_SIZE = 4;
 
-        private static readonly Stack<WaitForSeconds> WaitForSecondsPool;
-        private static readonly Stack<WaitForSecondsRealtime> WaitForSecondsRealtimePool;
+        static readonly Stack<WaitForSeconds> WaitForSecondsPool;
+        static readonly Stack<WaitForSecondsRealtime> WaitForSecondsRealtimePool;
 
         static BetterWaitForSeconds() {
             WaitForSecondsPool = new Stack<WaitForSeconds>(POOL_INITIAL_SIZE);
@@ -79,11 +79,11 @@ namespace Ryushin.Utils {
             return instance;
         }
 
-        private static void Pool(WaitForSeconds instance) {
+        static void Pool(WaitForSeconds instance) {
             WaitForSecondsPool.Push(instance);
         }
 
-        private static void Pool(WaitForSecondsRealtime instance) {
+        static void Pool(WaitForSecondsRealtime instance) {
             WaitForSecondsRealtimePool.Push(instance);
         }
     }

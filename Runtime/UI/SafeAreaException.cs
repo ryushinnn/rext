@@ -1,17 +1,17 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-namespace Ryushin.UI {
+namespace RExt.UI {
     public class SafeAreaException : MonoBehaviour {
-        private Vector2 _defaultScreen = new(1080, 1920);
-        private RectTransform _panel;
+        Vector2 defaultScreen = new(1080, 1920);
+        RectTransform rectTransform;
 
-        private void Awake() {
+        void Awake() {
             ApplyFullArea();
         }
 
-        private void ApplyFullArea() {
-            _panel = GetComponent<RectTransform>();
+        void ApplyFullArea() {
+            rectTransform = GetComponent<RectTransform>();
             StartCoroutine(DoApplyFullArea());
         }
 
@@ -21,17 +21,17 @@ namespace Ryushin.UI {
             FixSizeDelta();
         }
 
-        private void FixPosition() {
-            _panel.position = Vector3.zero;
+        void FixPosition() {
+            rectTransform.position = Vector3.zero;
         }
 
-        private void FixSizeDelta() {
-            var defRatio = _defaultScreen.y / _defaultScreen.x;
+        void FixSizeDelta() {
+            var defRatio = defaultScreen.y / defaultScreen.x;
             var scrRatio = (float)Screen.height / Screen.width;
             if (defRatio < scrRatio) {
-                _panel.sizeDelta = new Vector2(_defaultScreen.x, _defaultScreen.x * scrRatio);
+                rectTransform.sizeDelta = new Vector2(defaultScreen.x, defaultScreen.x * scrRatio);
             } else {
-                _panel.sizeDelta = new Vector2(_defaultScreen.y / scrRatio, _defaultScreen.y);
+                rectTransform.sizeDelta = new Vector2(defaultScreen.y / scrRatio, defaultScreen.y);
             }
         }
     }

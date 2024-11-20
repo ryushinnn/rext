@@ -3,17 +3,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Ryushin.Utils {
+namespace RExt.Utils {
     public class MainThreadDispatcher : MonoBehaviour {
-        private static readonly Queue<Action> _executionQueue = new();
+        static Queue<Action> ExecutionQueue = new();
         
         /// <summary>
         /// Lock the queue and add the IEnumerator to the queue 
         /// </summary>
         /// <param name="action">function that will be executed from the main thread</param>
         public void Enqueue(IEnumerator action) {
-            lock (_executionQueue) {
-                _executionQueue.Enqueue(() => { StartCoroutine(action);});
+            lock (ExecutionQueue) {
+                ExecutionQueue.Enqueue(() => { StartCoroutine(action);});
             }
         }
 

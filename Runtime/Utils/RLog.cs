@@ -1,7 +1,7 @@
 using UnityEngine;
 
-namespace Ryushin.Utils {
-    public static class ALog {
+namespace RExt.Utils {
+    public static class RLog {
         [System.Diagnostics.Conditional("UNITY_EDITOR")]
         public static void Log(object message, Object context = null)
         {

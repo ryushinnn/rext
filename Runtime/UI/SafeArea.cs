@@ -1,50 +1,50 @@
 using UnityEngine;
 
-namespace Ryushin.UI {
+namespace RExt.UI {
     [RequireComponent(typeof(RectTransform))]
     public class SafeArea : MonoBehaviour {
-        private RectTransform _panel;
-        private Rect _lastSafeArea = new(0f, 0f, 0f, 0f);
-        private ScreenOrientation _lastScreenOrientation = ScreenOrientation.AutoRotation;
+        RectTransform rectTransform;
+        Rect lastSafeArea = new(0f, 0f, 0f, 0f);
+        ScreenOrientation lastScreenOrientation = ScreenOrientation.AutoRotation;
 
-        private void Awake() {
-            _panel = GetComponent<RectTransform>();
+        void Awake() {
+            rectTransform = GetComponent<RectTransform>();
         }
 
-        private void Update() {
+        void Update() {
             Refresh();
         }
 
-        private void Refresh() {
-            if (_lastSafeArea != Screen.safeArea || _lastScreenOrientation != Screen.orientation) {
+        void Refresh() {
+            if (lastSafeArea != Screen.safeArea || lastScreenOrientation != Screen.orientation) {
                 ApplySafeArea(Screen.safeArea);
             }
         }
 
-        private void ApplySafeArea(Rect safeArea) {
-            _lastSafeArea = safeArea;
-            _lastScreenOrientation = Screen.orientation;
+        void ApplySafeArea(Rect safeArea) {
+            lastSafeArea = safeArea;
+            lastScreenOrientation = Screen.orientation;
 
-            if (_lastScreenOrientation == ScreenOrientation.LandscapeLeft
-                || _lastScreenOrientation == ScreenOrientation.LandscapeRight) {
+            if (lastScreenOrientation == ScreenOrientation.LandscapeLeft
+                || lastScreenOrientation == ScreenOrientation.LandscapeRight) {
                 var anchorMin = safeArea.position;
                 var anchorMax = safeArea.position + safeArea.size;
 
                 anchorMin.x /= Screen.width;
                 anchorMax.x /= Screen.width;
 
-                _panel.anchorMin = new Vector2(anchorMin.x, _panel.anchorMin.y);
-                _panel.anchorMax = new Vector2(anchorMax.x, _panel.anchorMax.y);
-            } else if (_lastScreenOrientation == ScreenOrientation.Portrait
-                       || _lastScreenOrientation == ScreenOrientation.PortraitUpsideDown) {
+                rectTransform.anchorMin = new Vector2(anchorMin.x, rectTransform.anchorMin.y);
+                rectTransform.anchorMax = new Vector2(anchorMax.x, rectTransform.anchorMax.y);
+            } else if (lastScreenOrientation == ScreenOrientation.Portrait
+                       || lastScreenOrientation == ScreenOrientation.PortraitUpsideDown) {
                 var anchorMin = safeArea.position;
                 var anchorMax = safeArea.position + safeArea.size;
 
                 anchorMin.y /= Screen.height;
                 anchorMax.y /= Screen.height;
 
-                _panel.anchorMin = new Vector2(_panel.anchorMin.x, anchorMin.y);
-                _panel.anchorMax = new Vector2(_panel.anchorMax.x, anchorMax.y);
+                rectTransform.anchorMin = new Vector2(rectTransform.anchorMin.x, anchorMin.y);
+                rectTransform.anchorMax = new Vector2(rectTransform.anchorMax.x, anchorMax.y);
             }
         }
     }

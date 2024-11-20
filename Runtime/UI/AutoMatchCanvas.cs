@@ -1,14 +1,14 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Ryushin.UI {
+namespace RExt.UI {
     public class AutoMatchCanvas : MonoBehaviour {
-        [SerializeField] private int _defaultWidth = 1920;
-        [SerializeField] private int _defaultHeight = 1080;
+        [SerializeField] int defaultWidth = 1920;
+        [SerializeField] int defaultHeight = 1080;
 
-        private void Awake() {
+        void Awake() {
             float currentRatio = (float)Screen.width / Screen.height;
-            float defaultRatio = (float)_defaultWidth / _defaultHeight;
+            float defaultRatio = (float)defaultWidth / defaultHeight;
             if (currentRatio > defaultRatio) {
                 GetComponent<CanvasScaler>().matchWidthOrHeight = 1;
             } else {
