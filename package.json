@@ -1,11 +1,11 @@
 {
-  "name": "com.ryushin.ryushin-lib",
-  "version": "1.1.0",
-  "displayName": "Ryushin Library",
-  "description": "This is the collection of Tien's reusable scrips.",
+  "name": "com.ryushin.rext",
+  "version": "1.2.0",
+  "displayName": "Ryushin Extension (C#)",
+  "description": "My collection of usefull and reusable scrips.",
   "unity": "2020.1",
   "author": {
-    "name": "Tien Assassin",
+    "name": "Tien Ryushin",
     "email": "liw140402@gmail.com"
   },
   "dependencies": {
