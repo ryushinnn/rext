@@ -1,96 +1,115 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace RExt.Utils.ObjectPool {
-    public static class ObjectPool {
-        static Dictionary<int, GameObject> PrefabsDictionary = new();
-        static Dictionary<int, Queue<GameObject>> AvailableObjectDictionary = new();
-        static ObjectContainer Container;
+    public class ObjectPool<T> where T : MonoBehaviour, IPoolable {
+        public int ActiveCount => activeCount;
+        public int TotalCount => activeCount + availableObjects.Count;
+        
+        readonly Queue<T> availableObjects = new();
+        readonly LinkedList<T> activeObjects = new();
+        readonly T prefab;
+        readonly Transform parent;
+        readonly int initialSize;
+        readonly int maxSize;
+        readonly int expansionSize;
+        
+        int activeCount  = 0;
 
-        public static GameObject SpawnObject(GameObject prefab, Vector3 position) {
-            var obj = GetNewObject(prefab);
-            var objectTag = obj.GetComponent<ObjectTag>();
-            objectTag.IsActive = true;
-            obj.SetActive(true);
-            obj.transform.position = position;
-            GetContainer().AddToCategory(obj, objectTag.Category);
-            return obj;
+        public ObjectPool(T prefab, int initialSize, int maxSize, int expansionSize, Transform parent = null) {
+            this.prefab = prefab ?? throw new ArgumentNullException(nameof(prefab));
+            this.initialSize = Mathf.Max(initialSize, 1);
+            this.maxSize = Mathf.Max(maxSize, this.initialSize);
+            this.expansionSize = Mathf.Max(expansionSize, 1);
+            this.parent = parent;
+            
+            Initialize();
         }
 
-        public static GameObject SpawnObject(GameObject prefab, Transform parent) {
-            var obj = GetNewObject(prefab);
-            var objectTag = obj.GetComponent<ObjectTag>();
-            objectTag.IsActive = true;
-            obj.SetActive(true);
-            obj.transform.localPosition = Vector3.zero;
-            obj.transform.SetParent(parent);
-            return obj;
-        }
-
-        public static void DestroyObject(GameObject obj) {
-            var objectTag = obj.GetComponent<ObjectTag>();
-            if (!objectTag.IsActive) return;
-            if (!AvailableObjectDictionary.ContainsKey(objectTag.PrefabID)) {
-                AvailableObjectDictionary.Add(objectTag.PrefabID, new Queue<GameObject>());
+        public T Get() {
+            T obj;
+            if (availableObjects.Count > 0) {
+                obj = availableObjects.Dequeue();
+            }
+            else if (activeCount < maxSize) {
+                ExpandPool();
+                obj = availableObjects.Dequeue();
+            }
+            else {
+                obj = RecycleOldestObject();
             }
 
-            objectTag.IsActive = false;
-            obj.SetActive(false);
-            AvailableObjectDictionary[objectTag.PrefabID].Enqueue(obj);
-            GetContainer().AddToCategory(obj, objectTag.Category);
-        }
-
-        static GameObject InstantiateObjectFromPool(GameObject prefab) {
-            PrefabsDictionary.TryAdd(prefab.GetInstanceID(), prefab);
-            var obj = GetContainer().InstantiateObject(prefab);
-            var prefabTag = prefab.GetComponent<ObjectTag>();
-            var objectTag = obj.GetComponent<ObjectTag>();
-            objectTag.PrefabID = prefab.GetInstanceID();
-            objectTag.Category = prefabTag.Category;
+            obj.Activate();
+            activeObjects.AddLast(obj);
+            activeCount++;
             return obj;
         }
 
-        static GameObject GetAvailableObjectFromQueue(GameObject prefab) {
-            if (AvailableObjectDictionary.TryGetValue(prefab.GetInstanceID(), out var queue) && queue.Count > 0) {
-                return queue.Dequeue();
-            }
-
-            return null;
+        public void Return(T obj) {
+            if (obj == null) return;
+            
+            obj.Deactivate();
+            activeObjects.Remove(obj);
+            availableObjects.Enqueue(obj);
+            activeCount--;
         }
 
-        static GameObject GetNewObject(GameObject prefab) {
-            var obj = GetAvailableObjectFromQueue(prefab);
-            obj ??= InstantiateObjectFromPool(prefab);
+        void Initialize() {
+            for (int i = 0; i < initialSize; i++) {
+                var obj = CreateNewObject();
+                obj.Deactivate();
+                availableObjects.Enqueue(obj);
+            }
+        }
+
+        T CreateNewObject() {
+            var obj = UnityEngine.Object.Instantiate(prefab, parent);
             return obj;
         }
 
-        static ObjectContainer GetContainer() {
-            if (!Container) Container = new GameObject("ObjectContainer").AddComponent<ObjectContainer>();
-            return Container;
+        T RecycleOldestObject() {
+            var obj = activeObjects.First.Value;
+            activeObjects.RemoveFirst();
+            obj.Deactivate();
+            return obj;
         }
 
-        class ObjectContainer : MonoBehaviour {
-            Dictionary<string, Transform> categoryDictionary = new();
-
-            public GameObject InstantiateObject(GameObject prefab) {
-                var obj = Instantiate(prefab);
-                obj.name = prefab.name;
-                return obj;
+        void ExpandPool() {
+            var expandCount = Mathf.Min(expansionSize, maxSize - (availableObjects.Count + activeCount));
+            for (int i = 0; i < expandCount; i++) {
+                var obj = CreateNewObject();
+                obj.Deactivate();
+                availableObjects.Enqueue(obj);
             }
+        }
 
-            public void AddToCategory(GameObject obj, string category) {
-                if (!categoryDictionary.ContainsKey(category)) {
-                    categoryDictionary.Add(category, CreateCategory(category));
+        void Cleanup(int targetSize) {
+            targetSize = Mathf.Clamp(targetSize, 0, maxSize);
+            while (availableObjects.Count > targetSize && availableObjects.Count + activeCount > initialSize) {
+                var obj = availableObjects.Dequeue();
+                if (obj != null) {
+                    UnityEngine.Object.Destroy(obj.gameObject);
                 }
-                
-                obj.transform.SetParent(categoryDictionary[category]);
+            }
+        }
+
+        void Clear() {
+            while (availableObjects.Count > 0) {
+                var obj = availableObjects.Dequeue();
+                if (obj != null) {
+                    UnityEngine.Object.Destroy(obj.gameObject);
+                }
             }
 
-            Transform CreateCategory(string category) {
-                var tf = new GameObject(category).transform;
-                tf.SetParent(transform);
-                return tf;
+            foreach (var obj in activeObjects) {
+                if (obj != null) {
+                    UnityEngine.Object.Destroy(obj.gameObject);
+                }
             }
+
+            activeObjects.Clear();
+            activeCount = 0;
         }
     }
 }
