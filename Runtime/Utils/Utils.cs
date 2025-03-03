@@ -35,6 +35,28 @@ namespace RExt.Utils {
             return 0;
         }
 
+        static readonly (int,string)[] romanMap = {
+            (1000, "M"), (900, "CM"), (500, "D"), (400, "CD"),
+            (100, "C"), (90, "XC"), (50, "L"), (40, "XL"),
+            (10, "X"), (9, "IX"), (5, "V"), (4, "IV"),
+            (1, "I")
+        };
+        
+        public static string GetRomanNumber(int num) {
+            string result = "";
+
+            foreach (var (value, symbol) in romanMap)
+            {
+                while (num >= value)
+                {
+                    result += symbol;
+                    num -= value;
+                }
+            }
+
+            return result;
+        }
+
         #endregion
 
         #region :: Gizmos ::
@@ -96,6 +118,23 @@ namespace RExt.Utils {
                 canvasPosition.x + canvasSizeDelta.x * (0.5f - target.anchorMin.x),
                 canvasPosition.y + canvasSizeDelta.y * (0.5f - target.anchorMin.y)
             );
+        }
+
+        #endregion
+
+        #region :: Geometry ::
+
+        public static float AngleOffAroundAxis(Vector3 to, Vector3 from, Vector3 axis, bool clockwise = false) {
+            Vector3 right;
+            if (clockwise) {
+                right = Vector3.Cross(from, axis);
+                from = Vector3.Cross(axis, right);
+            } else {
+                right = Vector3.Cross(axis, from);
+                from = Vector3.Cross(right, axis);
+            }
+
+            return Mathf.Atan2(Vector3.Dot(to, right), Vector3.Dot(to, from)) * Mathf.Rad2Deg;
         }
 
         #endregion

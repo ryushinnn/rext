@@ -221,12 +221,12 @@ namespace RExt.Extension {
 			return scrollView.CalculateFocusedScrollPosition( itemCenterPoint + contentSizeOffset );
 		}
 
-		public static void FocusAtPoint( this ScrollRect scrollView, Vector2 focusPoint )
+		public static void FocusAtPoint(this ScrollRect scrollView, Vector2 focusPoint )
 		{
 			scrollView.normalizedPosition = scrollView.CalculateFocusedScrollPosition( focusPoint );
 		}
 
-		public static void FocusOnItem( this ScrollRect scrollView, RectTransform item )
+		public static void FocusOnItem(this ScrollRect scrollView, RectTransform item )
 		{
 			scrollView.normalizedPosition = scrollView.CalculateFocusedScrollPosition( item );
 		}
@@ -247,16 +247,26 @@ namespace RExt.Extension {
 			scrollView.normalizedPosition = targetNormalizedPos;
 		}
 
-		public static IEnumerator FocusAtPointCoroutine( this ScrollRect scrollView, Vector2 focusPoint, float speed )
+		public static IEnumerator FocusAtPointCoroutine(this ScrollRect scrollView, Vector2 focusPoint, float speed )
 		{
 			yield return scrollView.LerpToScrollPositionCoroutine( scrollView.CalculateFocusedScrollPosition( focusPoint ), speed );
 		}
 
-		public static IEnumerator FocusOnItemCoroutine( this ScrollRect scrollView, RectTransform item, float speed )
+		public static IEnumerator FocusOnItemCoroutine(this ScrollRect scrollView, RectTransform item, float speed )
 		{
 			yield return scrollView.LerpToScrollPositionCoroutine( scrollView.CalculateFocusedScrollPosition( item ), speed );
 		}
 	}
+
+    public static class FloatExtension {
+        public static float ToMilliseconds(this float s) {
+            return s * 1000;
+        }
+        
+        public static float ToSeconds(this float ms) {
+            return ms / 1000;
+        }
+    }
     
     public static class StringExtension {
         public static bool IsValid(this string str) {
@@ -286,6 +296,19 @@ namespace RExt.Extension {
 #else
             foreach (Transform child in t) UnityEngine.Object.Destroy(child.gameObject);
 #endif
+        }
+    }
+
+    public static class ColorExtension {
+        public static string ToHex(this Color color) {
+            return $"#{ColorUtility.ToHtmlStringRGB(color)}";
+        }
+    }
+
+    public static class Texture2DExtension {
+        public static Sprite ToSprite(this Texture2D t) {
+            if (t == null) return null;
+            return Sprite.Create(t, new Rect(0, 0, t.width, t.height), new Vector2(0.5f, 0.5f));
         }
     }
 }
