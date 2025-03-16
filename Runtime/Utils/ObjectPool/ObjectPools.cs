@@ -4,6 +4,7 @@ using RExt.Core;
 using UnityEngine;
 
 namespace RExt.Utils.ObjectPool {
+    [DefaultExecutionOrder(-99)]
     public class ObjectPools : Singleton<ObjectPools> {
         Dictionary<Type, object> pools = new();
         Dictionary<string, ObjectPool> genericPools = new();
