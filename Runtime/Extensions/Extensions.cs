@@ -259,12 +259,12 @@ namespace RExt.Extension {
 	}
 
     public static class FloatExtension {
-        public static float ToMilliseconds(this float s) {
-            return s * 1000;
+        public static int ToMilliseconds(this float s) {
+            return (int)(s * 1000);
         }
         
-        public static float ToSeconds(this float ms) {
-            return ms / 1000;
+        public static float ToSeconds(this int ms) {
+            return (float)ms / 1000;
         }
     }
     
