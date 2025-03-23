@@ -93,8 +93,8 @@ namespace RExt.Extension {
         /// Find all flags of an enum (combination)
         /// Example: 0x01 | 0x04 -> [0x01,0x04]
         /// </summary>
-        public static IEnumerable<Enum> GetAllFlags(this Enum source) {
-            foreach (Enum value in Enum.GetValues(source.GetType())) {
+        public static IEnumerable<TEnum> GetAllFlags<TEnum>(this TEnum source) where TEnum : Enum{
+            foreach (TEnum value in Enum.GetValues(source.GetType())) {
                 if (source.Has(value)) {
                     yield return value;
                 }
