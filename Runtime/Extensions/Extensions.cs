@@ -39,7 +39,7 @@ namespace RExt.Extension {
             FirstAndSecond = First | Second,
             ExceptFirst = Second | Third | Fourth | Fifth | Sixth,
             // ...
-            All = First | Second | Third | Fourth | Fifth | Sixth
+            All = First | Second | Third | Fourth | Fifth | Sixth // | ...
         }
         
         public static string ToDescriptionString(this Enum value) {
@@ -87,6 +87,18 @@ namespace RExt.Extension {
         public static bool Has(this Enum combination, Enum value) {
             if (combination.GetType() != value.GetType()) throw new ArgumentException("Type mismatch");
             return (combination.IntValue() & value.IntValue()) == value.IntValue();
+        }
+
+        /// <summary>
+        /// Find all flags of an enum (combination)
+        /// Example: 0x01 | 0x04 -> [0x01,0x04]
+        /// </summary>
+        public static IEnumerable<Enum> GetAllFlags(this Enum source) {
+            foreach (Enum value in Enum.GetValues(source.GetType())) {
+                if (source.Has(value)) {
+                    yield return value;
+                }
+            }
         }
     }
     
