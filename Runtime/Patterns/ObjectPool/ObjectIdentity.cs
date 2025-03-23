@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace RExt.Utils.ObjectPool {
+namespace RExt.Patterns.ObjectPool {
     public class ObjectIdentity : MonoBehaviour {
         public string PrefabId => prefabId;
         

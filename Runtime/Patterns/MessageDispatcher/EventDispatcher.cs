@@ -1,6 +1,6 @@
 using System;
 
-namespace RExt.Utils.EventDispatcher {
+namespace RExt.Patterns.EventDispatcher {
     public class EventDispatcher<T> where T : Delegate {
         /// <summary>
         /// Use this to trigger messages
@@ -23,7 +23,7 @@ namespace RExt.Utils.EventDispatcher {
             Trigger = (T)Delegate.Remove(Trigger, callback);
         }
     }
-
+    
     public class EventExample {
         public delegate void Example1();
         public delegate void Example2(int value);

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace RExt.Utils.ObjectPool {
+namespace RExt.Patterns.ObjectPool {
     public class ObjectPool<T> where T : MonoBehaviour, IPoolable {
         public int ActiveCount => activeCount;
         public int TotalCount => activeCount + availableObjects.Count;

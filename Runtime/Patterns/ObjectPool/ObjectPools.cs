@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
-using RExt.Core;
+using RExt.Patterns.Singleton;
 using UnityEngine;
 
-namespace RExt.Utils.ObjectPool {
+namespace RExt.Patterns.ObjectPool {
     [DefaultExecutionOrder(-99)]
     public class ObjectPools : Singleton<ObjectPools> {
         Dictionary<Type, object> pools = new();
