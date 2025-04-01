@@ -318,7 +318,7 @@ namespace RExt.Extension {
 #endif
         }
 
-        public static void SetUniformScale(this Transform t, int factor) {
+        public static void SetUniformScale(this Transform t, float factor = 1) {
             t.localScale = factor * Vector3.one;
         }
     }
