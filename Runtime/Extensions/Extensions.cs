@@ -10,6 +10,14 @@ namespace RExt.Extension {
         public static T Find<T>(this T[] array, Predicate<T> match) {
             return Array.Find(array, match);
         }
+
+        public static void Sort<T>(this T[] array, Comparison<T> comparison) {
+            Array.Sort(array, comparison);
+        }
+        
+        public static bool IsNotEmpty<T>(this T[] array) {
+            return array != null && array.Length > 0;
+        }
     }
     
     public static class CollectionExtension {
@@ -287,7 +295,7 @@ namespace RExt.Extension {
     }
     
     public static class TransformExtension {
-        public static void IterateChildren<T>(this Transform t, Action<T> task) {
+        public static void ProcessChildren<T>(this Transform t, Action<T> task) {
             foreach (Transform child in t) {
                 if (child.TryGetComponent(out T component)) {
                     task?.Invoke(component);
@@ -308,6 +316,10 @@ namespace RExt.Extension {
 #else
             foreach (Transform child in t) UnityEngine.Object.Destroy(child.gameObject);
 #endif
+        }
+
+        public static void SetUniformScale(this Transform t, int factor) {
+            t.localScale = factor * Vector3.one;
         }
     }
 
