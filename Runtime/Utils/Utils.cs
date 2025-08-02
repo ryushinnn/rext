@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using RExt.Extension;
+using RExt.Extensions;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
